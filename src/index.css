@@ -1,0 +1,409 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  /* Palette: Digiora-style yellow accent on deep graphite / near-black (Changes.txt) */
+  --color-ink: #08090b;
+  --color-ink-2: #101216;
+  --color-ink-3: #191c21;
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-muted: #9b9ba8;
+  --color-cream: #f4f1ea;
+  --color-accent: #ffc21a;
+  --color-glow: #ff8a1e;
+  /* raised surface for menus/popovers — lighter than the page, still on-theme */
+  --color-panel: #262c35;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
+  --animate-spin-slow: spin 16s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(3%, -6%, 0) scale(1.08); }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* `clip`, not `hidden`: hidden on html/body makes them scroll containers,
+       which silently breaks every position: sticky column on the site */
+    overflow-x: clip;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-ink);
+    overflow-x: clip;
+    max-width: 100%;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+  img {
+    user-select: none;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1360px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) {
+    .container-x { padding-inline: 40px; }
+  }
+
+  .section { padding-block: 96px; }
+  @media (min-width: 1024px) {
+    .section { padding-block: 140px; }
+  }
+
+  /* italic serif accent used inside headings: wrap words with *asterisks* */
+  .accent {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--color-accent);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    box-shadow: 0 0 18px var(--color-accent);
+  }
+
+  /* Footer background wordmark — a "torch in a dark room": the letters are almost
+     invisible until the light following the cursor passes over them. */
+  .torch {
+    --tx: 50%;
+    --ty: 50%;
+    --torch-r: 300px;
+  }
+  .footer-wordmark {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-weight: 700;
+    /* sized so the wordmark spans nearly the full page width (client request) */
+    font-size: 20vw;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  /* barely-there silhouette */
+  .footer-wordmark--dim {
+    color: #14171b;
+  }
+  /* revealed inside the beam only */
+  .footer-wordmark--lit {
+    background-color: #3a4048;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-blend-mode: overlay;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+    -webkit-mask-image: radial-gradient(circle var(--torch-r) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, 0.75) 45%, transparent 72%);
+    mask-image: radial-gradient(circle var(--torch-r) at var(--tx) var(--ty), #000 0%, rgba(0, 0, 0, 0.75) 45%, transparent 72%);
+  }
+  /* warm light spilling around the beam */
+  .torch-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(
+      circle calc(var(--torch-r) * 1.15) at var(--tx) var(--ty),
+      color-mix(in oklab, var(--color-accent) 9%, transparent) 0%,
+      color-mix(in oklab, var(--color-accent) 4%, transparent) 40%,
+      transparent 72%
+    );
+  }
+  @media (max-width: 767px) {
+    .torch { --torch-r: 190px; }
+    .footer-wordmark { font-size: 18.5vw; }
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+  }
+
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+
+  .noise::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 120;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Obsidian glass ----------
+     Dark, tinted and translucent rather than white/frosted: a saturated blur of
+     whatever is behind it, a hairline highlight along the top edge and a deep
+     shadow, so panels read as smoked glass sitting above the page. */
+  .glass {
+    background: linear-gradient(170deg, rgba(46, 53, 64, 0.62), rgba(12, 14, 18, 0.72));
+    backdrop-filter: blur(18px) saturate(165%);
+    -webkit-backdrop-filter: blur(18px) saturate(165%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 18px 46px -26px rgba(0, 0, 0, 0.9);
+  }
+
+  /* The navbar pill. This lives on its own absolutely-positioned layer *behind*
+     the nav content rather than on the bar itself: an element with
+     backdrop-filter becomes the backdrop root for its descendants, so a
+     dropdown nested inside it would blur the bar instead of the page. */
+  .glass-nav {
+    background: linear-gradient(170deg, rgba(48, 55, 67, 0.3), rgba(10, 12, 15, 0.26));
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    transition:
+      background 0.6s var(--ease-out-expo),
+      backdrop-filter 0.6s var(--ease-out-expo),
+      border-color 0.6s var(--ease-out-expo),
+      box-shadow 0.6s var(--ease-out-expo);
+  }
+  /* once the page scrolls the glass thickens so the bar stays readable over content */
+  .glass-nav[data-solid='true'] {
+    background: linear-gradient(170deg, rgba(52, 60, 73, 0.62), rgba(11, 13, 17, 0.7));
+    backdrop-filter: blur(22px) saturate(170%);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    border-color: rgba(255, 255, 255, 0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 22px 54px -28px rgba(0, 0, 0, 0.95);
+  }
+  /* faint diagonal specular so the pill catches light like real glass */
+  .glass-nav::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.09) 0%, transparent 34%, transparent 72%, color-mix(in oklab, var(--color-accent) 7%, transparent) 100%);
+  }
+
+  /* Dropdown menus. Kept lighter than the page (a client request) and more
+     opaque than the bar, so the text stays legible wherever the menu opens. */
+  .glass-panel {
+    background: linear-gradient(170deg, rgba(64, 73, 87, 0.74), rgba(23, 27, 33, 0.82));
+    backdrop-filter: blur(26px) saturate(170%);
+    -webkit-backdrop-filter: blur(26px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.13),
+      0 30px 70px -22px rgba(0, 0, 0, 0.85);
+  }
+  /* Nested submenu: it sits inside the panel's own backdrop root, where a blur
+     has nothing useful to sample, so this one carries its colour outright. */
+  .glass-panel-sub {
+    background: linear-gradient(170deg, rgba(70, 80, 94, 0.97), rgba(28, 33, 40, 0.98));
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 26px 60px -20px rgba(0, 0, 0, 0.9);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass { background: rgba(18, 21, 26, 0.94); }
+    .glass-nav[data-solid='true'] { background: rgba(18, 21, 26, 0.94); }
+    .glass-panel, .glass-panel-sub { background: rgba(42, 48, 58, 0.99); }
+  }
+
+  .prose-post p { color: #c9c9d2; font-size: 18px; line-height: 1.8; margin-bottom: 1.5em; }
+  .prose-post h3 { font-size: 28px; margin: 1.6em 0 0.6em; }
+  .prose-post blockquote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 30px;
+    line-height: 1.3;
+    border-left: 2px solid var(--color-accent);
+    padding-left: 28px;
+    margin: 2em 0;
+    color: #fff;
+  }
+}
+
+.marquee-track:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Animated light-beam outline for cards ---------- */
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes beam-spin {
+  to { --beam-angle: 360deg; }
+}
+@layer components {
+  .beam {
+    position: relative;
+    isolation: isolate;
+  }
+}
+.beam::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0% 62%,
+    color-mix(in oklab, var(--color-accent) 35%, transparent) 76%,
+    var(--color-accent) 86%,
+    #fff 88%,
+    transparent 91% 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
+  transition: opacity 0.5s ease;
+  animation: beam-spin 6s linear infinite;
+  animation-delay: calc(var(--i, 0) * -1.4s);
+}
+.beam:hover::before { opacity: 1; }
+.beam:hover { box-shadow: 0 0 60px -18px color-mix(in oklab, var(--color-accent) 55%, transparent); }
+.beam-dark::before {
+  background: conic-gradient(from var(--beam-angle), transparent 0% 62%, rgba(10, 10, 12, 0.4) 76%, var(--color-ink) 86%, #fff 88%, transparent 91% 100%);
+  opacity: 0.8;
+}
+
+/* ---------- Focus grid: hovered image stays sharp, siblings blur ---------- */
+.focus-img {
+  transition: transform 1.2s var(--ease-out-expo), filter 0.6s ease;
+}
+.focus-dim { transition: opacity 0.6s ease; }
+@media (hover: hover) {
+  .focus-grid:has(.focus-item:hover) .focus-item:not(:hover) .focus-img {
+    filter: blur(8px) grayscale(0.35) brightness(0.55);
+    transform: scale(1.04);
+  }
+  .focus-grid:has(.focus-item:hover) .focus-item:not(:hover) .focus-dim { opacity: 0.4; }
+}
+
+/* ---------- Image motion (replaces the old WebGL liquid distortion) ----------
+   A slow pan-and-zoom that plays forwards then backwards. `alternate` is what
+   keeps it smooth: the animation reverses through the same easing instead of
+   snapping back at the end of a cycle, so there is no seam to notice.
+   --i staggers neighbouring images and --pan-x/--pan-y vary the direction. */
+@keyframes img-pan {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to   { transform: scale(1.12) translate3d(calc(var(--pan-x, -2) * 1%), calc(var(--pan-y, -1.5) * 1%), 0); }
+}
+.img-motion {
+  animation: img-pan var(--pan-time, 19s) cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  animation-delay: calc(var(--i, 0) * -3.7s);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* A soft band of light that sweeps across the frame once on hover. Sits on its
+   own layer above the picture so the picture itself is never filtered. */
+.img-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.img-sheen::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -45%;
+  width: 38%;
+  transform: translate3d(0, 0, 0) rotate(12deg);
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12) 42%,
+    color-mix(in oklab, var(--color-accent) 20%, transparent) 55%,
+    transparent
+  );
+  transition:
+    transform 1.5s var(--ease-out-expo),
+    opacity 0.7s ease;
+}
+@media (hover: hover) {
+  .group:hover .img-sheen::before,
+  .img-sheen:hover::before {
+    transform: translate3d(320%, 0, 0) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+/* Gradient ring that sweeps around a circle */
+.spin-ring {
+  padding: 5px;
+  background: conic-gradient(from var(--beam-angle), transparent 0% 25%, color-mix(in oklab, var(--color-accent) 30%, transparent) 55%, var(--color-accent) 90%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: beam-spin 7s linear infinite;
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--color-accent) 45%, transparent));
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "file": "showreel.mp4",
+    "poster": "showreel-poster.jpg",
+    "title": "Cloudy sky",
+    "source": "Coverr",
+    "sourceUrl": "https://coverr.co/videos/cloudy-sky-2v00ohjpqe",
+    "downloadUrl": "https://cdn.coverr.co/videos/coverr-cloudy-sky-2765/1080p.mp4",
+    "license": "Coverr License",
+    "licenseUrl": "https://coverr.co/license",
+    "commercialUse": true,
+    "attributionRequired": false,
+    "notes": "Bright light-blue sky with soft white clouds drifting gently upward-left; no people, text or logos. Re-encoded for web: 1920x1080, H.264 crf 26, 25 fps, audio stripped, +faststart. Trimmed from the 18s source (1s-14s) and closed into a seamless 12s loop with a 1s crossfade, so the muted background loop in the hero has no visible cut. Poster is frame 0 of the final clip."
+  },
+  {
+    "file": "story-1.mp4",
+    "poster": "story-1-poster.jpg",
+    "title": "A man happily talks on a virtual meeting",
+    "source": "Coverr",
+    "downloadUrl": "https://cdn.coverr.co/videos/coverr-a-man-happily-talks-on-a-virtual-meeting-9706/720p.mp4",
+    "license": "Coverr License",
+    "licenseUrl": "https://coverr.co/license",
+    "commercialUse": true,
+    "attributionRequired": false,
+    "notes": "PLACEHOLDER b-roll behind a placeholder client quote. Trimmed 3s-11s, cropped 540x720 (3:4) at x=220, 24 fps, H.264 crf 30, audio stripped, +faststart. Audio is removed on purpose: the people on screen are stock actors, not the quoted clients, so the clip is silent ambience behind the written quote and never presented as recorded speech."
+  },
+  {
+    "file": "story-2.mp4",
+    "poster": "story-2-poster.jpg",
+    "title": "A young woman asking questions and making notes in a meeting",
+    "source": "Coverr",
+    "downloadUrl": "https://cdn.coverr.co/videos/coverr-a-young-woman-asking-questions-and-making-notes-in-a-meeting-1297/720p.mp4",
+    "license": "Coverr License",
+    "licenseUrl": "https://coverr.co/license",
+    "commercialUse": true,
+    "attributionRequired": false,
+    "notes": "PLACEHOLDER b-roll behind a placeholder client quote. Trimmed 0.5s-8s, cropped 540x720 (3:4) at x=700, 24 fps, H.264 crf 30, audio stripped, +faststart."
+  },
+  {
+    "file": "story-3.mp4",
+    "poster": "story-3-poster.jpg",
+    "title": "A young man presenting results in a meeting",
+    "source": "Coverr",
+    "downloadUrl": "https://cdn.coverr.co/videos/coverr-a-young-man-presenting-results-in-a-meeting-9762/720p.mp4",
+    "license": "Coverr License",
+    "licenseUrl": "https://coverr.co/license",
+    "commercialUse": true,
+    "attributionRequired": false,
+    "notes": "PLACEHOLDER b-roll behind a placeholder client quote. Trimmed 5.5s-13s, cropped 540x720 (3:4) at x=430, 24 fps, H.264 crf 30, audio stripped, +faststart."
+  }
+]
